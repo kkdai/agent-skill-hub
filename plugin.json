@@ -1,0 +1,13 @@
+{
+  "name": "agent-skill-hub",
+  "version": "1.0.0",
+  "description": "A collection of specialized skills for AI agents.",
+  "author": {
+    "name": "Hub Maintainer"
+  },
+  "license": "MIT",
+  "keywords": ["gcp", "n8n", "skill-hub"],
+  "engines": {
+    "claude": ">=1.0.0"
+  }
+}
