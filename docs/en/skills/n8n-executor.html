@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>n8n Executor - Agent Skill Hub</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="../../en/skills/n8n-executor.html" class="active">EN</a>
+        <a href="../../zh/skills/n8n-executor.html">ZH</a>
+    </div>
+
+    <header>
+        <a href="../index.html" class="logo" style="font-weight: 800; font-size: 1.5rem; text-decoration: none; color: inherit;">Agent Skill Hub</a>
+        <nav>
+            <a href="../index.html#skills">Skills</a>
+            <a href="https://github.com/kkdai/agent-skill-hub">GitHub</a>
+        </nav>
+    </header>
+
+    <article class="skill-detail">
+        <h2>🔄 n8n Executor</h2>
+        <p>Use when executing n8n workflows, checking workflow status, or retrieving execution data.</p>
+
+        <h3>Overview</h3>
+        <p>Assists in the execution and monitoring of workflows in an n8n instance using the n8n API. This skill allows agents to bridge LLM intelligence with complex automated workflows.</p>
+
+        <h3>When to Use</h3>
+        <ul>
+            <li>Triggering a specific n8n workflow by ID.</li>
+            <li>Retrieving the status of a past execution.</li>
+            <li>Fetching JSON data from a finished workflow.</li>
+        </ul>
+
+        <h3>Core Pattern</h3>
+        <p>Always confirm the workflow ID and the endpoint URL before execution to ensure you are targeting the correct workflow.</p>
+        <pre><code># Example API call
+curl -X POST "https://n8n.example.com/api/v1/workflows/[ID]/execute" \
+     -H "X-N8N-API-KEY: [API_KEY]"</code></pre>
+
+        <h3>Quick Reference</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Endpoint Pattern</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Execute</td>
+                    <td><code>POST /workflows/:id/execute</code></td>
+                </tr>
+                <tr>
+                    <td>Get Status</td>
+                    <td><code>GET /executions/:id</code></td>
+                </tr>
+                <tr>
+                    <td>List Workflows</td>
+                    <td><code>GET /workflows</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Implementation</h3>
+        <ol>
+            <li>Obtain workflow ID and API key from n8n settings.</li>
+            <li>Construct the API request (using <code>curl</code> or a similar tool).</li>
+            <li>Handle the response and log the execution ID for future status checks.</li>
+        </ol>
+
+        <h3>Common Mistakes</h3>
+        <ul>
+            <li><strong>Authentication Error:</strong> Incorrect API key or lack of "X-N8N-API-KEY" header.</li>
+            <li><strong>Invalid ID:</strong> Using an incorrect workflow ID or endpoint.</li>
+            <li><strong>Connectivity:</strong> Network connectivity issues to the n8n instance.</li>
+        </ul>
+
+        <div style="margin-top: 4rem;">
+            <a href="../index.html#skills" class="btn btn-secondary">&larr; Back to Skills</a>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Agent Skill Hub. Built with ❤️ for the AI community.</p>
+    </footer>
+</body>
+</html>

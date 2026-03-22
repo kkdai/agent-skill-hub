@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>n8n 執行器 - Agent Skill Hub</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="../../en/skills/n8n-executor.html">EN</a>
+        <a href="../../zh/skills/n8n-executor.html" class="active">ZH</a>
+    </div>
+
+    <header>
+        <a href="../index.html" class="logo" style="font-weight: 800; font-size: 1.5rem; text-decoration: none; color: inherit;">Agent Skill Hub</a>
+        <nav>
+            <a href="../index.html#skills">技能庫</a>
+            <a href="https://github.com/kkdai/agent-skill-hub">GitHub</a>
+        </nav>
+    </header>
+
+    <article class="skill-detail">
+        <h2>🔄 n8n 執行器</h2>
+        <p>用於執行 n8n 工作流、檢查狀態或獲取執行數據。</p>
+
+        <h3>概覽</h3>
+        <p>透過 n8n API 協助執行並監控 n8n 實例中的工作流。此技能讓代理能夠將 LLM 的智慧與自動化工作流無縫結合。</p>
+
+        <h3>使用場景</h3>
+        <ul>
+            <li>透過 ID 觸發特定的 n8n 工作流。</li>
+            <li>獲取過去執行的狀態。</li>
+            <li>從已完成的工作流中獲取 JSON 數據。</li>
+        </ul>
+
+        <h3>核心模式</h3>
+        <p>執行前請務必確認工作流 ID 和 API 端點 URL，以確保目標正確。</p>
+        <pre><code># API 調用範例
+curl -X POST "https://n8n.example.com/api/v1/workflows/[ID]/execute" \
+     -H "X-N8N-API-KEY: [API_KEY]"</code></pre>
+
+        <h3>快速參考</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>操作</th>
+                    <th>端點模式</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>執行</td>
+                    <td><code>POST /workflows/:id/execute</code></td>
+                </tr>
+                <tr>
+                    <td>獲取狀態</td>
+                    <td><code>GET /executions/:id</code></td>
+                </tr>
+                <tr>
+                    <td>列出工作流</td>
+                    <td><code>GET /workflows</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>實作步驟</h3>
+        <ol>
+            <li>從 n8n 設定中取得工作流 ID 和 API 金鑰。</li>
+            <li>建構 API 請求 (使用 <code>curl</code> 或類似工具)。</li>
+            <li>處理回應並記錄執行 ID，以便後續檢查狀態。</li>
+        </ol>
+
+        <h3>常見錯誤</h3>
+        <ul>
+            <li><strong>驗證錯誤：</strong> API 金鑰不正確或缺少 "X-N8N-API-KEY" 標頭。</li>
+            <li><strong>無效 ID：</strong> 使用了錯誤的工作流 ID 或端點。</li>
+            <li><strong>連線問題：</strong> 無法連線至 n8n 實例的網路問題。</li>
+        </ul>
+
+        <div style="margin-top: 4rem;">
+            <a href="../index.html#skills" class="btn btn-secondary">&larr; 返回技能庫</a>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Agent Skill Hub. 為 AI 社群精心打造 ❤️</p>
+    </footer>
+</body>
+</html>

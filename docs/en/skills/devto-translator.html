@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev.to Translator - Agent Skill Hub</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="../../en/skills/devto-translator.html" class="active">EN</a>
+        <a href="../../zh/skills/devto-translator.html">ZH</a>
+    </div>
+
+    <header>
+        <a href="../index.html" class="logo" style="font-weight: 800; font-size: 1.5rem; text-decoration: none; color: inherit;">Agent Skill Hub</a>
+        <nav>
+            <a href="../index.html#skills">Skills</a>
+            <a href="https://github.com/kkdai/agent-skill-hub">GitHub</a>
+        </nav>
+    </header>
+
+    <article class="skill-detail">
+        <h2>📝 Dev.to Blog Translation Tool</h2>
+        <p>Use when translating and publishing Dev.to draft articles into English using the Gemini API.</p>
+
+        <h3>Overview</h3>
+        <p>This skill assists in using the <code>devto-blog-translation-tool</code> to automate the translation of Dev.to draft articles into English while preserving Markdown formatting and technical terms.</p>
+
+        <h3>When to Use</h3>
+        <ul>
+            <li>Translating draft articles from a Dev.to account.</li>
+            <li>Automating the publishing of translated content.</li>
+            <li>Managing blog localization from non-English languages to English.</li>
+        </ul>
+
+        <h3>Core Pattern</h3>
+        <p>Ensure that both <code>DEVTO_API_KEY</code> and <code>GEMINI_API_KEY</code> are properly configured in the <code>.env</code> file before execution.</p>
+        <pre><code># Example execution (assuming Go is installed)
+go run cmd/translator/main.go</code></pre>
+
+        <h3>Quick Reference</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>DEVTO_API_KEY</code></td>
+                    <td>API key from Dev.to settings</td>
+                </tr>
+                <tr>
+                    <td><code>GEMINI_API_KEY</code></td>
+                    <td>API key from Google AI Studio</td>
+                </tr>
+                <tr>
+                    <td><code>go mod download</code></td>
+                    <td>Install required Go dependencies</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Implementation</h3>
+        <ol>
+            <li>Clone the tool repository: <code>https://github.com/kkdai/devto-blog-translation-tool</code>.</li>
+            <li>Configure <code>.env</code> with required API keys.</li>
+            <li>Run <code>go mod download</code> to fetch dependencies.</li>
+            <li>Execute <code>go run cmd/translator/main.go</code> and confirm the prompt to translate and publish.</li>
+        </ol>
+
+        <h3>Common Mistakes</h3>
+        <ul>
+            <li><strong>Missing API Keys:</strong> Ensure <code>.env</code> is correctly populated.</li>
+            <li><strong>Auto-Publishing Warning:</strong> Be aware that this tool automatically publishes articles after translation.</li>
+            <li><strong>Go Environment:</strong> Ensure Go 1.21+ is installed on the system.</li>
+        </ul>
+
+        <div style="margin-top: 4rem;">
+            <a href="../index.html#skills" class="btn btn-secondary">&larr; Back to Skills</a>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Agent Skill Hub. Built with ❤️ for the AI community.</p>
+    </footer>
+</body>
+</html>

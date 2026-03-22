@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Skill Hub</title>
+    <script>
+        // Simple language detection or default to English
+        const lang = navigator.language || navigator.userLanguage;
+        if (lang.startsWith('zh')) {
+            window.location.href = './zh/index.html';
+        } else {
+            window.location.href = './en/index.html';
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecting to <a href="./en/index.html">Agent Skill Hub</a>...</p>
+</body>
+</html>

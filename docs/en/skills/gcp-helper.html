@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Helper - Agent Skill Hub</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="../../en/skills/gcp-helper.html" class="active">EN</a>
+        <a href="../../zh/skills/gcp-helper.html">ZH</a>
+    </div>
+
+    <header>
+        <a href="../index.html" class="logo" style="font-weight: 800; font-size: 1.5rem; text-decoration: none; color: inherit;">Agent Skill Hub</a>
+        <nav>
+            <a href="../index.html#skills">Skills</a>
+            <a href="https://github.com/kkdai/agent-skill-hub">GitHub</a>
+        </nav>
+    </header>
+
+    <article class="skill-detail">
+        <h2>☁️ GCP Helper</h2>
+        <p>Use when managing GCP resources like GCE, GCS, or GKE via gcloud CLI.</p>
+
+        <h3>Overview</h3>
+        <p>Assists in the management of Google Cloud Platform (GCP) resources by providing standardized commands and best practices. This skill helps LLM agents navigate complex cloud environments safely.</p>
+
+        <h3>When to Use</h3>
+        <ul>
+            <li>Managing GCE instances, GCS buckets, or GKE clusters.</li>
+            <li>Checking IAM permissions or configuring service accounts.</li>
+            <li>Deploying Cloud Functions or Cloud Run services.</li>
+        </ul>
+
+        <h3>Core Pattern</h3>
+        <p>Always verify the current active project before making any changes to avoid accidental modifications to production environments.</p>
+        <pre><code># Verify project
+gcloud config get-value project</code></pre>
+
+        <h3>Quick Reference</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Common Command</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GCE</td>
+                    <td><code>gcloud compute instances list</code></td>
+                </tr>
+                <tr>
+                    <td>GCS</td>
+                    <td><code>gsutil ls</code></td>
+                </tr>
+                <tr>
+                    <td>GKE</td>
+                    <td><code>gcloud container clusters list</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Implementation</h3>
+        <ol>
+            <li>Check active project: <code>gcloud config get-value project</code>.</li>
+            <li>List resources for the specific service: <code>gcloud [service] list</code>.</li>
+            <li>Perform the desired action with confirmed parameters.</li>
+        </ol>
+
+        <h3>Common Mistakes</h3>
+        <ul>
+            <li><strong>Wrong Project:</strong> Working in the wrong project due to lack of verification.</li>
+            <li><strong>Not Authenticated:</strong> Forgetting to authenticate (<code>gcloud auth login</code>).</li>
+            <li><strong>Insufficient Permissions:</strong> Executing commands without necessary IAM roles.</li>
+        </ul>
+
+        <div style="margin-top: 4rem;">
+            <a href="../index.html#skills" class="btn btn-secondary">&larr; Back to Skills</a>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Agent Skill Hub. Built with ❤️ for the AI community.</p>
+    </footer>
+</body>
+</html>
