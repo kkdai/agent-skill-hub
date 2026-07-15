@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE LIFF API - Agent Skill Hub</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="../../en/skills/line-liff-api.html">EN</a>
+        <a href="../../zh/skills/line-liff-api.html" class="active">ZH</a>
+    </div>
+
+    <header>
+        <a href="../index.html" class="logo" style="font-weight: 800; font-size: 1.5rem; text-decoration: none; color: inherit;">Agent Skill Hub</a>
+        <nav>
+            <a href="../index.html#skills">技能庫</a>
+            <a href="https://github.com/kkdai/agent-skill-hub">GitHub</a>
+        </nav>
+    </header>
+
+    <article class="skill-detail">
+        <h2>📱 LINE LIFF API</h2>
+        <p>用於開發、調試或與 LINE Front-end Framework (LIFF) SDK 互動（包括初始化、身分驗證、取得使用者個人檔案、發送訊息和分享內容給好友）。</p>
+
+        <h3>概述 (Overview)</h3>
+        <p>此技能提供與 LINE Front-end Framework (LIFF) 用戶端 JS SDK 整合和互動的結構化參考。涵蓋 LIFF SDK 屬性、初始化、身分驗證、使用者上下文、個人檔案取得，以及分享目標選擇器 (Share Target Picker) 與條碼掃描等自訂功能。</p>
+
+        <h3>何時使用 (When to Use)</h3>
+        <ul>
+            <li>建立在 LINE 內建 LIFF 瀏覽器或外部瀏覽器中執行的網頁應用程式。</li>
+            <li>使用 <code>liff.init()</code> 初始化 LIFF SDK 以取得 LINE 專屬功能。</li>
+            <li>執行使用者身分驗證 (<code>liff.login()</code>, <code>liff.logout()</code>, <code>liff.isLoggedIn()</code>)。</li>
+            <li>獲取使用者詳細資訊 (<code>liff.getProfile()</code>, <code>liff.getDecodedIDToken()</code>)。</li>
+            <li>直接向當前聊天室發送訊息 (<code>liff.sendMessages()</code>) 或選擇目標好友以分享內容 (<code>liff.shareTargetPicker()</code>)。</li>
+            <li>取得執行階段環境參數（OS、語言、LINE 版本等）。</li>
+        </ul>
+
+        <h3>核心模式 (Core Pattern)</h3>
+        <p>務必儘早呼叫 <code>liff.init()</code>，並在調用其他 LIFF SDK 方法之前等待傳回的 Promise 解析完成。</p>
+        
+        <h4>初始化與登入流程 (JavaScript 範例)</h4>
+        <pre><code>import liff from '@line/liff';
+
+async function initializeLiff(liffId) {
+  try {
+    await liff.init({ liffId });
+    if (!liff.isLoggedIn()) {
+      // 若尚未登入，自動重新導向至 LINE 登入頁面
+      liff.login();
+    } else {
+      // 登入成功後開始使用其他 SDK 功能，例如取得個人檔案
+      const profile = await liff.getProfile();
+      console.log('User Profile:', profile);
+    }
+  } catch (error) {
+    console.error('LIFF 初始化失敗:', error.code, error.message);
+  }
+}</code></pre>
+
+        <h3>快速參考 (Quick Reference)</h3>
+        
+        <h4>在 <code>liff.init()</code> 之前即可使用的方法</h4>
+        <p>這些方法可用於在 SDK 完全初始化之前查詢環境狀態：</p>
+        <ul>
+            <li><code>liff.ready</code> (表示初始化完成的 Promise 物件)</li>
+            <li><code>liff.getOS()</code> (傳回 <code>'ios'</code>, <code>'android'</code>, 或 <code>'web'</code>)</li>
+            <li><code>liff.getAppLanguage()</code> (取得 LINE 應用程式的語言設定)</li>
+            <li><code>liff.getVersion()</code> / <code>liff.getLineVersion()</code></li>
+            <li><code>liff.isInClient()</code> (檢查是否在 LINE 應用程式內執行)</li>
+            <li><code>liff.closeWindow()</code> (關閉 LIFF 視窗)</li>
+        </ul>
+
+        <h4>核心 SDK 方法 (Core SDK Methods)</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>方法</th>
+                    <th>傳回類型</th>
+                    <th>描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>liff.init(config)</code></td>
+                    <td><code>Promise&lt;void&gt;</code></td>
+                    <td>使用 <code>liffId</code> 初始化 LIFF 應用程式</td>
+                </tr>
+                <tr>
+                    <td><code>liff.isLoggedIn()</code></td>
+                    <td><code>Boolean</code></td>
+                    <td>檢查使用者是否已通過驗證</td>
+                </tr>
+                <tr>
+                    <td><code>liff.login(options)</code></td>
+                    <td><code>void</code></td>
+                    <td>觸發 LINE 登入流程</td>
+                </tr>
+                <tr>
+                    <td><code>liff.logout()</code></td>
+                    <td><code>void</code></td>
+                    <td>登出使用者</td>
+                </tr>
+                <tr>
+                    <td><code>liff.getProfile()</code></td>
+                    <td><code>Promise&lt;Profile&gt;</code></td>
+                    <td>取得使用者個人檔案（姓名、圖片、狀態訊息）</td>
+                </tr>
+                <tr>
+                    <td><code>liff.getDecodedIDToken()</code></td>
+                    <td><code>Object</code></td>
+                    <td>解碼使用者的 OIDC ID Token（包含電子郵件）</td>
+                </tr>
+                <tr>
+                    <td><code>liff.sendMessages(msgs)</code></td>
+                    <td><code>Promise&lt;void&gt;</code></td>
+                    <td>向當前聊天室發送訊息（最多 5 則）</td>
+                </tr>
+                <tr>
+                    <td><code>liff.shareTargetPicker(msgs)</code></td>
+                    <td><code>Promise&lt;Response&gt;</code></td>
+                    <td>開啟好友選擇器以分享訊息</td>
+                </tr>
+                <tr>
+                    <td><code>liff.openWindow(options)</code></td>
+                    <td><code>void</code></td>
+                    <td>在 LIFF 瀏覽器或外部瀏覽器中開啟網址</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>實作步驟 (Implementation Steps)</h3>
+        <ol>
+            <li><strong>註冊 LIFF 應用程式</strong>：在 LINE Developers 控制台建立 LINE Login 通道，並註冊您的 LIFF 應用程式以取得 <code>LIFF ID</code> 並設定 <code>Endpoint URL</code>。</li>
+            <li><strong>匯入 SDK</strong>：透過 CDN (<code>https://static.line-scdn.net/liff/edge/2/sdk.js</code>) 或 npm (<code>npm install @line/liff</code>) 將 LIFF SDK 新增到您的專案中。</li>
+            <li><strong>初始化</strong>：呼叫 <code>liff.init({ liffId })</code>。請確保僅在 init 的 Promise 解析完成<em>之後</em>才觸發網址變更或分析工具的頁面檢視，以防止憑證洩漏。</li>
+            <li><strong>獲取權限範圍 (Scopes)</strong>：確保您的通道已被授予必要的權限範圍（例如 <code>profile</code>, <code>openid</code>, <code>chat_message.write</code>），以便調用個人檔案或傳送訊息的 API。</li>
+            <li><strong>驗證 Token（伺服器端）</strong>：如果您需要在後端驗證使用者身分，請將原始 ID Token（透過 <code>liff.getIDToken()</code> 取得）或 Access Token 傳送到您的後端，並呼叫 LINE 的驗證端點。</li>
+        </ol>
+
+        <h3>常見錯誤 (Common Mistakes)</h3>
+        <ul>
+            <li><strong>在初始化前呼叫方法</strong>：在 <code>liff.init()</code> 的 Promise 解析完成之前，即呼叫 <code>liff.getProfile()</code> 等方法。</li>
+            <li><strong>Endpoint URL 路徑錯誤</strong>：在與控制台中設定的 Endpoint URL 不同（或不是其子目錄）的網址上執行 <code>liff.init()</code>。這會導致警告並使初始化無法正常運作。</li>
+            <li><strong>Google Analytics 資訊洩漏</strong>：在初始化完成前，將包含使用者 Access Token 的主要重新導向網址記錄到 Google Analytics。在 LIFF v2.11.0+ 中，憑證會在解析後自動清除；請將分析記錄邏輯寫在 <code>liff.init().then()</code> 區塊內。</li>
+            <li><strong>誤解 OpenChat 相容性</strong>：LIFF 應用程式在 LINE OpenChat 內大部分不相容（例如：無法取得使用者個人檔案）。</li>
+            <li><strong>忽視外部瀏覽器限制</strong>：期望 <code>liff.scanCode()</code> 或 <code>liff.sendMessages()</code> 等功能在外部手機/電腦瀏覽器中運作（這些功能僅在 LINE 內建 LIFF 瀏覽器中受支援）。請使用 <code>liff.isInClient()</code> 檢查相容性。</li>
+            <li><strong>修改 SDK 查詢參數</strong>：在初始化解析完成之前手動修改 <code>liff.state</code> 或 <code>liff.referrer</code> 等查詢參數，這會破壞 LIFF 轉跳機制。</li>
+        </ul>
+
+        <div style="margin-top: 4rem;">
+            <a href="../index.html#skills" class="btn btn-secondary">&larr; 返回技能庫</a>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Agent Skill Hub. 為 AI 社群精心打造 ❤️</p>
+    </footer>
+</body>
+</html>

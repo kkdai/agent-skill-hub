@@ -22,6 +22,7 @@ claude plugin add ./path/to/agent-skill-hub
 - **n8n-executor**: Executor for n8n workflows.
 - **devto-translator**: Automate Dev.to draft translations into English.
 - **line-messaging-api**: Build, debug, and manage LINE Bots via LINE Messaging API.
+- **line-liff-api**: Build, debug, and manage LINE front-end apps (LIFF) via LIFF JS SDK.
 
 ## Directory Structure
 
@@ -36,6 +37,8 @@ claude plugin add ./path/to/agent-skill-hub
     │   └── SKILL.md
     ├── devto-translator/ # Dev.to Translator skill
     │   └── SKILL.md
-    └── line-messaging-api/ # LINE Messaging API skill
+    ├── line-messaging-api/ # LINE Messaging API skill
+    │   └── SKILL.md
+    └── line-liff-api/    # LINE LIFF API skill
         └── SKILL.md
 ```

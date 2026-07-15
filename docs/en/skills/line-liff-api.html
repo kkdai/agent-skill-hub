@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE LIFF API - Agent Skill Hub</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="../../en/skills/line-liff-api.html" class="active">EN</a>
+        <a href="../../zh/skills/line-liff-api.html">ZH</a>
+    </div>
+
+    <header>
+        <a href="../index.html" class="logo" style="font-weight: 800; font-size: 1.5rem; text-decoration: none; color: inherit;">Agent Skill Hub</a>
+        <nav>
+            <a href="../index.html#skills">Skills</a>
+            <a href="https://github.com/kkdai/agent-skill-hub">GitHub</a>
+        </nav>
+    </header>
+
+    <article class="skill-detail">
+        <h2>📱 LINE LIFF API</h2>
+        <p>Use when building, debugging, or interacting with the LINE Front-end Framework (LIFF) SDK (initialization, authentication, retrieving user profiles, sending messages, and sharing target pickers).</p>
+
+        <h3>Overview</h3>
+        <p>This skill provides a structured reference for integrating and interacting with the LINE Front-end Framework (LIFF) client-side JS SDK. It covers LIFF SDK properties, initialization, authentication, user context, profile retrieval, and custom features like share target picker and scanning codes.</p>
+
+        <h3>When to Use</h3>
+        <ul>
+            <li>Building web applications that run inside LINE's in-app LIFF browser or external browsers.</li>
+            <li>Initializing the LIFF SDK using <code>liff.init()</code> to gain access to LINE features.</li>
+            <li>Performing user authentication (<code>liff.login()</code>, <code>liff.logout()</code>, <code>liff.isLoggedIn()</code>).</li>
+            <li>Fetching user details (<code>liff.getProfile()</code>, <code>liff.getDecodedIDToken()</code>).</li>
+            <li>Sending messages directly to the current chat room (<code>liff.sendMessages()</code>) or selecting target friends to share content (<code>liff.shareTargetPicker()</code>).</li>
+            <li>Getting runtime environment parameters (OS, language, LINE version, etc.).</li>
+        </ul>
+
+        <h3>Core Pattern</h3>
+        <p>Always call <code>liff.init()</code> as early as possible and wait for the returned promise to resolve before calling other LIFF SDK methods.</p>
+        
+        <h4>Initialization & Login Flow (JavaScript)</h4>
+        <pre><code>import liff from '@line/liff';
+
+async function initializeLiff(liffId) {
+  try {
+    await liff.init({ liffId });
+    if (!liff.isLoggedIn()) {
+      // Automatically redirect to LINE Login if not logged in
+      liff.login();
+    } else {
+      // Proceed to fetch profile or use other SDK features
+      const profile = await liff.getProfile();
+      console.log('User Profile:', profile);
+    }
+  } catch (error) {
+    console.error('LIFF initialization failed:', error.code, error.message);
+  }
+}</code></pre>
+
+        <h3>Quick Reference</h3>
+        
+        <h4>Methods Available Before <code>liff.init()</code></h4>
+        <p>These methods can be used to query the environment before the SDK is fully initialized:</p>
+        <ul>
+            <li><code>liff.ready</code> (Promise indicating init completion)</li>
+            <li><code>liff.getOS()</code> (returns <code>'ios'</code>, <code>'android'</code>, or <code>'web'</code>)</li>
+            <li><code>liff.getAppLanguage()</code> (gets language setting of the LINE app)</li>
+            <li><code>liff.getVersion()</code> / <code>liff.getLineVersion()</code></li>
+            <li><code>liff.isInClient()</code> (checks if running inside the LINE app)</li>
+            <li><code>liff.closeWindow()</code> (closes the LIFF window)</li>
+        </ul>
+
+        <h4>Core SDK Methods</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Return Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>liff.init(config)</code></td>
+                    <td><code>Promise&lt;void&gt;</code></td>
+                    <td>Initializes the LIFF app with <code>liffId</code></td>
+                </tr>
+                <tr>
+                    <td><code>liff.isLoggedIn()</code></td>
+                    <td><code>Boolean</code></td>
+                    <td>Checks if the user is authenticated</td>
+                </tr>
+                <tr>
+                    <td><code>liff.login(options)</code></td>
+                    <td><code>void</code></td>
+                    <td>Triggers LINE login flow</td>
+                </tr>
+                <tr>
+                    <td><code>liff.logout()</code></td>
+                    <td><code>void</code></td>
+                    <td>Logs out the user</td>
+                </tr>
+                <tr>
+                    <td><code>liff.getProfile()</code></td>
+                    <td><code>Promise&lt;Profile&gt;</code></td>
+                    <td>Gets user profile (name, picture, status)</td>
+                </tr>
+                <tr>
+                    <td><code>liff.getDecodedIDToken()</code></td>
+                    <td><code>Object</code></td>
+                    <td>Decodes the user's ID OIDC token (contains email)</td>
+                </tr>
+                <tr>
+                    <td><code>liff.sendMessages(msgs)</code></td>
+                    <td><code>Promise&lt;void&gt;</code></td>
+                    <td>Sends messages to current chat (max 5)</td>
+                </tr>
+                <tr>
+                    <td><code>liff.shareTargetPicker(msgs)</code></td>
+                    <td><code>Promise&lt;Response&gt;</code></td>
+                    <td>Opens a friend picker to share messages</td>
+                </tr>
+                <tr>
+                    <td><code>liff.openWindow(options)</code></td>
+                    <td><code>void</code></td>
+                    <td>Opens a URL in the LIFF browser or external browser</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Implementation Steps</h3>
+        <ol>
+            <li><strong>Register LIFF App</strong>: Create a LINE Login channel in the LINE Developers Console and register your LIFF app to get a <code>LIFF ID</code> and configure the <code>Endpoint URL</code>.</li>
+            <li><strong>Import SDK</strong>: Add LIFF SDK to your project via CDN (<code>https://static.line-scdn.net/liff/edge/2/sdk.js</code>) or npm (<code>npm install @line/liff</code>).</li>
+            <li><strong>Initialize</strong>: Call <code>liff.init({ liffId })</code>. Make sure to trigger URL changes or analytics pageviews only <em>after</em> the init promise resolves to prevent credential leakage.</li>
+            <li><strong>Acquire Scopes</strong>: Ensure your channel is granted the necessary scopes (e.g. <code>profile</code>, <code>openid</code>, <code>chat_message.write</code>) in order to call profile or messaging APIs.</li>
+            <li><strong>Verify Tokens (Server Side)</strong>: If you need to verify the user identity on your backend, send the raw ID token (retrieved via <code>liff.getIDToken()</code>) or Access Token to your backend and call LINE's verification endpoints.</li>
+        </ol>
+
+        <h3>Common Mistakes</h3>
+        <ul>
+            <li><strong>Calling Methods Before Init</strong>: Calling methods like <code>liff.getProfile()</code> before the <code>liff.init()</code> promise has resolved.</li>
+            <li><strong>Wrong Endpoint URL Pathing</strong>: Running <code>liff.init()</code> on a URL that is not at or lower than the configured Endpoint URL in the console. Doing so causes warnings and prevents correct initialization.</li>
+            <li><strong>Google Analytics Leakage</strong>: Logging the primary redirect URL (which contains the user's access token in the query params) to Google Analytics before the init resolves. In LIFF v2.11.0+, credentials are automatically removed after resolution; trigger logging inside the <code>then()</code> block of <code>liff.init()</code>.</li>
+            <li><strong>Misunderstanding OpenChat Compatibility</strong>: LIFF applications are mostly incompatible inside LINE OpenChat (e.g., retrieving user profiles is disabled).</li>
+            <li><strong>Ignoring External Browser Constraints</strong>: Expecting features like <code>liff.scanCode()</code> or <code>liff.sendMessages()</code> to work in external mobile/desktop browsers (they are only supported in the LINE in-app LIFF browser). Use <code>liff.isInClient()</code> to check compatibility.</li>
+            <li><strong>Modifying SDK Query Parameters</strong>: Modifying query parameters like <code>liff.state</code> or <code>liff.referrer</code> manually before the initialization resolves, which breaks LIFF transitions.</li>
+        </ul>
+
+        <div style="margin-top: 4rem;">
+            <a href="../index.html#skills" class="btn btn-secondary">&larr; Back to Skills</a>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Agent Skill Hub. Built with ❤️ for the AI community.</p>
+    </footer>
+</body>
+</html>

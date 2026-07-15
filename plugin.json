@@ -6,7 +6,7 @@
     "name": "Hub Maintainer"
   },
   "license": "MIT",
-  "keywords": ["gcp", "n8n", "skill-hub", "line"],
+  "keywords": ["gcp", "n8n", "skill-hub", "line", "liff"],
   "engines": {
     "claude": ">=1.0.0"
   }
