@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE Messaging API - Agent Skill Hub</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="../../en/skills/line-messaging-api.html">EN</a>
+        <a href="../../zh/skills/line-messaging-api.html" class="active">ZH</a>
+    </div>
+
+    <header>
+        <a href="../index.html" class="logo" style="font-weight: 800; font-size: 1.5rem; text-decoration: none; color: inherit;">Agent Skill Hub</a>
+        <nav>
+            <a href="../index.html#skills">技能庫</a>
+            <a href="https://github.com/kkdai/agent-skill-hub">GitHub</a>
+        </nav>
+    </header>
+
+    <article class="skill-detail">
+        <h2>💬 LINE Messaging API</h2>
+        <p>用於開發、調試或與 LINE Messaging API 互動（包括 Webhook 事件、簽章驗證、發送回覆/推送/群組/廣播訊息以及管理圖文選單）。</p>
+
+        <h3>概述 (Overview)</h3>
+        <p>此技能提供與 LINE Messaging API 整合和互動的結構化參考。涵蓋常見規範、Webhook 處理、簽章驗證、訊息格式和圖文選單管理。</p>
+
+        <h3>何時使用 (When to Use)</h3>
+        <ul>
+            <li>實作 Webhook 路由以接收來自 LINE 平台的訊息和事件對象。</li>
+            <li>驗證 Webhook 請求簽章 (<code>x-line-signature</code>) 以確保安全性。</li>
+            <li>發送回覆、推送、多播 (multicast) 或廣播訊息。</li>
+            <li>獲取使用者個人檔案資訊或下載使用者傳送的媒體內容（圖片、影片、音訊、檔案）。</li>
+            <li>建立和管理圖文選單 (rich menus)（上傳圖片、將圖文選單連結/取消連結至使用者）。</li>
+        </ul>
+
+        <h3>核心模式 (Core Pattern)</h3>
+        <p>在處理事件之前，務必對傳入的 Webhook 進行簽章驗證，並立即向 LINE 平台回傳 <code>200 OK</code> 回應。</p>
+        
+        <h4>Webhook 簽章驗證 (Python 範例)</h4>
+        <pre><code>import hmac
+import hashlib
+import base64
+
+# 驗證標頭 'x-line-signature'
+channel_secret = "YOUR_CHANNEL_SECRET"
+body = request_raw_body_string
+
+hash = hmac.new(
+    channel_secret.encode('utf-8'),
+    body.encode('utf-8'),
+    hashlib.sha256
+).digest()
+
+signature = base64.b64encode(hash).decode('utf-8')
+# 將簽章與請求標頭進行比較（標頭鍵值不區分大小寫）
+is_valid = hmac.compare_digest(signature, request_headers.get('x-line-signature'))</code></pre>
+
+        <h3>快速參考 (Quick Reference)</h3>
+        
+        <h4>網域名稱 (Domain Names)</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>網域名稱</th>
+                    <th>用途</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>api.line.me</code></td>
+                    <td>標準 API 端點（訊息、個人檔案、圖文選單等）</td>
+                </tr>
+                <tr>
+                    <td><code>api-data.line.me</code></td>
+                    <td>媒體資料端點（訊息下載/上傳、圖文選單圖片、受眾檔案）</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>核心 API 端點 (Essential Endpoints)</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>API 端點</th>
+                    <th>方法</th>
+                    <th>路徑</th>
+                    <th>描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>發送回覆 (Reply)</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/message/reply</code></td>
+                    <td>使用一次性的 <code>replyToken</code> 進行回覆</td>
+                </tr>
+                <tr>
+                    <td><strong>發送推送 (Push)</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/message/push</code></td>
+                    <td>直接向特定使用者、群組或聊天室發送訊息</td>
+                </tr>
+                <tr>
+                    <td><strong>發送多播 (Multicast)</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/message/multicast</code></td>
+                    <td>向多個使用者發送推送訊息（最多 500 人）</td>
+                </tr>
+                <tr>
+                    <td><strong>發送廣播 (Broadcast)</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/message/broadcast</code></td>
+                    <td>向所有好友發送訊息</td>
+                </tr>
+                <tr>
+                    <td><strong>取得訊息內容</strong></td>
+                    <td><code>GET</code></td>
+                    <td><code>/v2/bot/message/{messageId}/content</code></td>
+                    <td>取得媒體內容（圖片、影片等）<em>需經由 api-data.line.me</em></td>
+                </tr>
+                <tr>
+                    <td><strong>顯示載入動畫</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/chat/loading/start</code></td>
+                    <td>在聊天室中顯示載入中指示器</td>
+                </tr>
+                <tr>
+                    <td><strong>建立圖文選單</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/richmenu</code></td>
+                    <td>建立新的圖文選單物件</td>
+                </tr>
+                <tr>
+                    <td><strong>上傳圖文選單圖片</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/richmenu/{richMenuId}/content</code></td>
+                    <td>上傳 JPEG 或 PNG 圖片 <em>需經由 api-data.line.me</em></td>
+                </tr>
+                <tr>
+                    <td><strong>連結圖文選單</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/user/{userId}/richmenu/{richMenuId}</code></td>
+                    <td>將圖文選單連結至特定使用者</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>實作步驟 (Implementation Steps)</h3>
+        <ol>
+            <li><strong>取得憑證</strong>：在 LINE Developers 控制台建立通道，並複製 <strong>Channel Secret</strong> 和 <strong>Channel Access Token</strong>。</li>
+            <li><strong>設定路由</strong>：建立一個與您註冊的 Webhook URL 相符的 HTTPS 路由。</li>
+            <li><strong>驗證並回應</strong>：驗證 <code>x-line-signature</code> 中的簽章。立即回傳 HTTP <code>200 OK</code> 狀態，即使 Webhook 包含空的事件陣列。</li>
+            <li><strong>處理事件</strong>：遍歷 <code>events[]</code>。處理常見的事件類型，如 <code>message</code>、<code>follow</code> 和 <code>postback</code>。</li>
+            <li><strong>建構承載資料 (Payloads)</strong>：進行回覆或推送時，請正確格式化訊息物件（例如：<code>{ "type": "text", "text": "Hello" }</code>）。</li>
+        </ol>
+
+        <h3>常見錯誤 (Common Mistakes)</h3>
+        <ul>
+            <li><strong>上傳/下載網域錯誤</strong>：嘗試使用 <code>api.line.me</code> 而不是 <code>api-data.line.me</code> 來上傳圖文選單圖片或下載訊息內容將會失敗。</li>
+            <li><strong>重複使用/延遲回覆 Token</strong>：回覆 Token 會迅速過期且只能使用一次。請立即使用，或在處理較慢時改用推送訊息 (Push)。</li>
+            <li><strong>標頭區分大小寫</strong>：Webhook 標頭欄位名稱可能不區分大小寫（例如 <code>X-Line-Signature</code> 與 <code>x-line-signature</code>）。請以不區分大小寫的方式進行解析。</li>
+            <li><strong>超出大小限制</strong>：Messaging API 的 Payload 大小限制為 2MB。請確保您的附件/文字承載資料不超過此限制。</li>
+            <li><strong>未處理 Standby 模式</strong>：如果 Bot 的模式為 <code>standby</code>（其他模組處於作用中狀態），請避免發送訊息以防止混淆使用者。</li>
+        </ul>
+
+        <div style="margin-top: 4rem;">
+            <a href="../index.html#skills" class="btn btn-secondary">&larr; 返回技能庫</a>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Agent Skill Hub. 為 AI 社群精心打造 ❤️</p>
+    </footer>
+</body>
+</html>

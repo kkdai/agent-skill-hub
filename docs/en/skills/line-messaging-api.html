@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINE Messaging API - Agent Skill Hub</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="../../en/skills/line-messaging-api.html" class="active">EN</a>
+        <a href="../../zh/skills/line-messaging-api.html">ZH</a>
+    </div>
+
+    <header>
+        <a href="../index.html" class="logo" style="font-weight: 800; font-size: 1.5rem; text-decoration: none; color: inherit;">Agent Skill Hub</a>
+        <nav>
+            <a href="../index.html#skills">Skills</a>
+            <a href="https://github.com/kkdai/agent-skill-hub">GitHub</a>
+        </nav>
+    </header>
+
+    <article class="skill-detail">
+        <h2>💬 LINE Messaging API</h2>
+        <p>Use when building, debugging, or interacting with the LINE Messaging API (webhook events, signature verification, sending replies/broadcasts/multicasts, and managing rich menus).</p>
+
+        <h3>Overview</h3>
+        <p>This skill provides a structured reference for integrating and interacting with the LINE Messaging API. It covers common specifications, webhook handling, signature verification, message formats, and rich menu management.</p>
+
+        <h3>When to Use</h3>
+        <ul>
+            <li>Implementing webhook endpoints to receive messages and event objects from the LINE Platform.</li>
+            <li>Verifying the webhook request signatures (<code>x-line-signature</code>) for security.</li>
+            <li>Sending reply, push, multicast, or broadcast messages.</li>
+            <li>Fetching user profile information or downloading user-sent media content (images, videos, audio, files).</li>
+            <li>Creating and managing rich menus (uploading images, linking/unlinking rich menus to users).</li>
+        </ul>
+
+        <h3>Core Pattern</h3>
+        <p>Always perform signature validation on incoming webhooks before processing events, and immediately return a <code>200 OK</code> response to the LINE Platform.</p>
+        
+        <h4>Webhook Signature Validation (Python)</h4>
+        <pre><code>import hmac
+import hashlib
+import base64
+
+# Validate header 'x-line-signature'
+channel_secret = "YOUR_CHANNEL_SECRET"
+body = request_raw_body_string
+
+hash = hmac.new(
+    channel_secret.encode('utf-8'),
+    body.encode('utf-8'),
+    hashlib.sha256
+).digest()
+
+signature = base64.b64encode(hash).decode('utf-8')
+# Compare signature with the request header (case-insensitive header keys)
+is_valid = hmac.compare_digest(signature, request_headers.get('x-line-signature'))</code></pre>
+
+        <h3>Quick Reference</h3>
+        
+        <h4>Domain Names</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Domain name</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>api.line.me</code></td>
+                    <td>Standard API endpoints (messages, profiles, rich menus, etc.)</td>
+                </tr>
+                <tr>
+                    <td><code>api-data.line.me</code></td>
+                    <td>Media data endpoints (downloads/uploads of messages, rich menu images, audience files)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Essential Endpoints</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>API Endpoint</th>
+                    <th>Method</th>
+                    <th>Path</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Send Reply</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/message/reply</code></td>
+                    <td>Reply using a short-lived <code>replyToken</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Send Push</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/message/push</code></td>
+                    <td>Send a push message to a specific user, group, or room</td>
+                </tr>
+                <tr>
+                    <td><strong>Send Multicast</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/message/multicast</code></td>
+                    <td>Send push messages to multiple users (max 500)</td>
+                </tr>
+                <tr>
+                    <td><strong>Send Broadcast</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/message/broadcast</code></td>
+                    <td>Send message to all friends</td>
+                </tr>
+                <tr>
+                    <td><strong>Get Message Content</strong></td>
+                    <td><code>GET</code></td>
+                    <td><code>/v2/bot/message/{messageId}/content</code></td>
+                    <td>Get media content (image, video, etc.) <em>via api-data.line.me</em></td>
+                </tr>
+                <tr>
+                    <td><strong>Start Loading</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/chat/loading/start</code></td>
+                    <td>Display loading indicator in chat</td>
+                </tr>
+                <tr>
+                    <td><strong>Create Rich Menu</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/richmenu</code></td>
+                    <td>Create a new rich menu object</td>
+                </tr>
+                <tr>
+                    <td><strong>Upload Rich Menu Image</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/richmenu/{richMenuId}/content</code></td>
+                    <td>Upload JPEG or PNG image <em>via api-data.line.me</em></td>
+                </tr>
+                <tr>
+                    <td><strong>Link Rich Menu</strong></td>
+                    <td><code>POST</code></td>
+                    <td><code>/v2/bot/user/{userId}/richmenu/{richMenuId}</code></td>
+                    <td>Link rich menu to a specific user</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Implementation Steps</h3>
+        <ol>
+            <li><strong>Obtain Credentials</strong>: Set up a channel on the LINE Developers Console and copy the <strong>Channel Secret</strong> and <strong>Channel Access Token</strong>.</li>
+            <li><strong>Setup Route</strong>: Create an HTTPS route matching your registered Webhook URL.</li>
+            <li><strong>Verify & Respond</strong>: Verify the signature in <code>x-line-signature</code>. Return HTTP <code>200 OK</code> status immediately, even if the webhook contains an empty event array.</li>
+            <li><strong>Process Events</strong>: Loop through <code>events[]</code>. Handle common event types like <code>message</code>, <code>follow</code>, and <code>postback</code>.</li>
+            <li><strong>Construct Payloads</strong>: When replying or pushing, format message objects appropriately (e.g., <code>{ "type": "text", "text": "Hello" }</code>).</li>
+        </ol>
+
+        <h3>Common Mistakes</h3>
+        <ul>
+            <li><strong>Wrong Domain for Uploads/Downloads</strong>: Attempting to upload rich menu images or download message content using <code>api.line.me</code> instead of <code>api-data.line.me</code> will fail.</li>
+            <li><strong>Reusing/Delaying Reply Tokens</strong>: Reply tokens expire quickly and are one-time use. Use them immediately, or fall back to Push messages if processing is slow.</li>
+            <li><strong>Case-Sensitive Header Access</strong>: Webhook header field names can be case-insensitive (e.g., <code>X-Line-Signature</code> vs <code>x-line-signature</code>). Parse them case-insensitively.</li>
+            <li><strong>Exceeding Size Limits</strong>: The payload size limit for messaging APIs is 2MB. Ensure your attachment/text payloads do not exceed this limit.</li>
+            <li><strong>Not Handling Standby Mode</strong>: If the bot's mode is <code>standby</code> (another module is active), avoid sending messages to prevent user confusion.</li>
+        </ul>
+
+        <div style="margin-top: 4rem;">
+            <a href="../index.html#skills" class="btn btn-secondary">&larr; Back to Skills</a>
+        </div>
+    </article>
+
+    <footer>
+        <p>&copy; 2026 Agent Skill Hub. Built with ❤️ for the AI community.</p>
+    </footer>
+</body>
+</html>

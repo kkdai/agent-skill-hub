@@ -21,6 +21,7 @@ claude plugin add ./path/to/agent-skill-hub
 - **gcp-helper**: Helper for GCP resource management.
 - **n8n-executor**: Executor for n8n workflows.
 - **devto-translator**: Automate Dev.to draft translations into English.
+- **line-messaging-api**: Build, debug, and manage LINE Bots via LINE Messaging API.
 
 ## Directory Structure
 
@@ -33,6 +34,8 @@ claude plugin add ./path/to/agent-skill-hub
     │   └── SKILL.md      # Core definition
     ├── n8n-executor/     # n8n Executor skill
     │   └── SKILL.md
-    └── devto-translator/ # Dev.to Translator skill
+    ├── devto-translator/ # Dev.to Translator skill
+    │   └── SKILL.md
+    └── line-messaging-api/ # LINE Messaging API skill
         └── SKILL.md
 ```
