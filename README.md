@@ -23,6 +23,7 @@ claude plugin add ./path/to/agent-skill-hub
 - **devto-translator**: Automate Dev.to draft translations into English.
 - **line-messaging-api**: Build, debug, and manage LINE Bots via LINE Messaging API.
 - **line-liff-api**: Build, debug, and manage LINE front-end apps (LIFF) via LIFF JS SDK.
+- **line-login**: Integrate, build, and debug LINE Login v2.1 (OAuth 2.0 / OpenID Connect).
 
 ## Directory Structure
 
@@ -39,6 +40,8 @@ claude plugin add ./path/to/agent-skill-hub
     │   └── SKILL.md
     ├── line-messaging-api/ # LINE Messaging API skill
     │   └── SKILL.md
-    └── line-liff-api/    # LINE LIFF API skill
+    ├── line-liff-api/    # LINE LIFF API skill
+    │   └── SKILL.md
+    └── line-login/       # LINE Login v2.1 skill
         └── SKILL.md
 ```
